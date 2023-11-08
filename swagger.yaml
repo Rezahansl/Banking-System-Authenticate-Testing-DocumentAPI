@@ -1,0 +1,190 @@
+openapi: 3.0.0
+info:
+  title: Basic-Banking-System-API
+  version: 1.0.0
+  description: Users, Account, Transaction
+paths:
+  /api/v1/auth/register:
+    post:
+      summary: Register pengguna baru
+      description: Memungkinkan pengguna untuk mendaftar dengan memberikan informasi.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                email:
+                  type: string
+                password:
+                  type: string
+                identity_type:
+                  type: string
+                identity_number:
+                  type: string
+                address:
+                  type: string
+      responses:
+        '200':
+          description: Pengguna berhasil registrasi.
+        '400':
+          description: Permintaan register gagal.
+        '500':
+          description: Terjadi kesalahan server.
+
+  /api/v1/auth/login:
+    post:
+      summary: Pengguna login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+      responses:
+        '200':
+          description: Pengguna berhasil login.
+        '400':
+          description: Permintaan login gagal.
+        '403':
+          description: Tidak sah. Token tidak valid.
+        '500':
+          description: Terjadi kesalahan server
+
+  /api/v1/users:
+    get:
+      summary: Mengambil daftar semua pengguna
+      responses:
+        '200':
+          description: Daftar pengguna berhasil diambil
+        '500':
+          description: Terjadi kesalahan server
+
+  /api/v1/users/{userId}:
+    get:
+      summary: Mengambil pengguna berdasarkan ID
+      parameters:
+        - in: path
+          name: userId
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Data pengguna berhasil diambil
+        '404':
+          description: Pengguna tidak ditemukan
+        '500':
+          description: Terjadi kesalahan server
+
+  /api/v1/accounts:
+    get:
+      summary: Mengambil daftar semua account
+      responses:
+        '200':
+          description: Daftar account berhasil diambil
+        '500':
+          description: Terjadi kesalahan server
+    post:
+      summary: Menambahkan akun bank pada pengguna
+      description: Memungkinkan pengguna menambahkan rekening bank.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                userId:
+                  type: integer
+                bank_name:
+                  type: string
+                bank_account_number:
+                  type: string
+                balance:
+                  type: number
+      responses:
+        '201':
+          description: Berhasil menambahkan bank account.
+        '400':
+          description: Permintaan menambahkan bank gagal.
+        '404':
+          description: User tidak ditemukan.
+        '500':
+          description: Terjadi kesalahan server
+
+  /api/v1/accounts/{userId}:
+    get:
+      summary: Mengambil account berdasarkan ID
+      parameters:
+        - in: path
+          name: userId
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Data account berhasil diambil
+        '404':
+          description: Account tidak ditemukan
+        '500':
+          description: Terjadi kesalahan server
+
+  /api/v1/transactions:
+    get:
+      summary: Mengambil daftar semua transaction
+      responses:
+        '200':
+          description: Daftar transaction berhasil diambil
+        '500':
+          description: Terjadi kesalahan server
+    post:
+      summary: Menambahkan transaksi antara pengguna
+      description: Memungkinkan pengguna menambahkan transaksi antara pengguna.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                source_account_id:
+                  type: integer
+                destination_account_id:
+                  type: integer
+                amount:
+                  type: number
+      responses:
+        '201':
+          description: Berhasil membuat transaksi.
+        '400':
+          description: Permintaan transaksi gagal.
+        '404':
+          description: Satu atau kedua akun tidak ditemukan.
+        '500':
+          description: Terjadi kesalahan server
+
+  /api/v1/transactions/{userId}:
+    get:
+      summary: Mengambil transaction berdasarkan ID
+      parameters:
+        - in: path
+          name: userId
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Data transaction berhasil diambil
+        '404':
+          description: Transaction tidak ditemukan
+        '500':
+          description: Terjadi kesalahan server
